@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    let card = Flashcard.examples[0]
     var body: some View {
         VStack {
             Image(systemName: "rectangle.stack.fill")
@@ -19,7 +20,13 @@ struct ContentView: View {
             Text("Study Smarter")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
-            
+            Text(card.front)
+            if let hint = card.hint {
+                Text("Hint: \(hint)")
+                    .font(.subheadline)
+                    .italic()
+                    .padding(5)
+            }
         }
         .padding()
     }
