@@ -7,23 +7,43 @@ struct CardRow: View {
     @State private var isShowingBack = false
     
     var body: some View {
+        ZStack{
+            front
+            
+                .rotation3DEffect(.degrees(isShowingBack ? 180 : 0), axis: (x: 0, y: 1, z: 0))
+            // So you dont see the other face
+                .opacity(isShowingBack ? 0 : 1)
+            
+            back
+                .rotation3DEffect(.degrees(isShowingBack ? 0 : -180), axis: (x: 0, y: 1, z: 0))
+                .opacity(isShowingBack ? 1 : 0)
+            
+        }
+        .padding(.vertical, 4)
+        
+        //Responisble for switching faces when clicked on empty space
+        .contentShape(Rectangle())
+        // Responsible for interactions (clicking) on the flashcards
+        .onTapGesture {
+            withAnimation(.easeInOut(duration: 0.4)) {
+                isShowingBack.toggle() // toggle flips between true and false
+            }
+        }
+    }
+    
+    private var front: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text(card.front)
                     .font(.headline)
                 
-                if isShowingBack {
-                    Text("Answer: \(card.back)")
-                        .foregroundStyle(.indigo)
-                } else {
-                    // if let gives creates a real string. Which is what hint Text needs. It needs a String and not a String?
-                    if let hint = card.hint {
-                        Text("Hint: \(hint)")
-                            .font(.subheadline)
-                            .italic()
-                            .foregroundStyle(.secondary)
-                    }
-                    
+                
+                // if let gives creates a real string. Which is what hint Text needs. It needs a String and not a String?
+                if let hint = card.hint {
+                    Text("Hint: \(hint)")
+                        .font(.subheadline)
+                        .italic()
+                        .foregroundStyle(.secondary)
                 }
             }
             Spacer()
@@ -33,17 +53,27 @@ struct CardRow: View {
                     .foregroundStyle(.yellow)
             }
         }
-        .padding(.vertical, 4)
-        
-        // Responsible for interactions (clicking) on the flashcards
-        .onTapGesture {
-            withAnimation{
-                isShowingBack.toggle() // toggle flips between true and false
+    }
+    
+    
+    
+    private var back: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(card.front)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                Text("Answer: \(card.back)")
+                    .font(.headline)
+                    .foregroundStyle(.indigo)
             }
+            Spacer()
         }
         
     }
+    
 }
+
 #Preview {
     CardRow(card: Flashcard.examples[0])
 }
