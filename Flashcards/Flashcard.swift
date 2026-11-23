@@ -20,7 +20,8 @@ extension Flashcard {
     static let examples = [
         Flashcard(front: "What does Swift prefer more: let or var?", back: "let", hint: "The one which can't change."),
         Flashcard(front: "Struct vs Class.", back: "Structs are value types while Classes are reference types."),
-        Flashcard(front: "What does ? after a type mean?", back: "That it is optionl",hint: "Does it always appear?")
+        Flashcard(front: "What does ? after a type mean?", back: "That it is optional",hint: "Does it always appear?"),
+        Flashcard(front: "When you flip Card 1, the other cards don't flip. Why does this happen even though we wrote @State once?", back: "Each row built from @State gets it's own copy")
     ]
 }
 
