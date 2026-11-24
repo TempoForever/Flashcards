@@ -6,11 +6,16 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
-    @State private var cards = Flashcard.examples
-    
+    //Query stays in sync with data. Always updated.
+    @Query(sort: \Flashcard.createdAt) private var cards: [Flashcard]
+     
     @State private var isShowingSheet = false
+    
+    @Environment(\.modelContext) private var modelContext
+    
     
     var body: some View {
         VStack {
@@ -24,22 +29,32 @@ struct ContentView: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
             
-            List(cards) { card in
-                CardRow(card: card)
-                
+            List{
+                ForEach(cards) { card in
+                    CardRow(card: card)
+                }
+                .onDelete(perform: deleteCard)
             }
             Button("Add Card", systemImage: "plus") {
                 isShowingSheet = true
             }
         }
         .padding()
-        // The $ sign is used here because it lets someone else change it. So without the $ sign if you make an edit to it (add a new card) it wouldn't change the actual page.
+        // The $ sign is used here because it lets someone else change it. So without the $ sign if you make an edit to it (add a new card) it wouldn't change the actual page. Now its gone anyways.
+        
         .sheet(isPresented: $isShowingSheet) {
-            AddCardView(cards: $cards)
+            AddCardView()
+        }
+    }
+    
+    private func deleteCard(at offsets: IndexSet) {
+        for index in offsets {
+            modelContext.delete(cards[index])
         }
     }
 }
 
 #Preview {
     ContentView()
+        .modelContainer(for: Flashcard.self, inMemory: true)
 }

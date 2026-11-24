@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct FlashcardsApp: App {
@@ -13,5 +14,7 @@ struct FlashcardsApp: App {
         WindowGroup {
             ContentView()
         }
+        //Creates the database. Stored on disk and not in memory. It can be saved when closed 
+        .modelContainer(for: Flashcard.self)
     }
 }
